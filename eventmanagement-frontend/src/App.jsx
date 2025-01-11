@@ -1,35 +1,34 @@
 import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
 import './App.css'
-import { Button } from './components/ui/button'
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+import AdminLoginPage from './pages/AdminLoginPage';
+import AdminDashboard from './pages/AdminDashboard';
+import EventsDetailsPage from './pages/EventsDetailsPage';
+import { LoginForm } from './components/user-login-page';
+import UserLoginPage from './pages/UserLoginPage';
+import UserPage from './pages/UserPage';
+import UserEvent from './pages/UserEvent';
+
+
 
 function App() {
   const [count, setCount] = useState(0)
 
   return (
     <>
-      <Button>click me</Button>
-      <Card>
-        <CardHeader>
-          <CardTitle>Card Title</CardTitle>
-          <CardDescription>Card Description</CardDescription>
-        </CardHeader>
-        <CardContent>
-          <p>Card Content</p>
-        </CardContent>
-        <CardFooter>
-          <p>Card Footer</p>
-        </CardFooter>
-      </Card>
+      <BrowserRouter>
+        <Routes>
+          <Route path="/" element={<AdminLoginPage />} />
+          <Route path="/admindashboard/:adminId" element={<AdminDashboard />} />
+          <Route
+            path="/eventdetails/:eventId"
+            element={<EventsDetailsPage />}
+          />
+          <Route path="/userlogin" element={<UserLoginPage />} />
+          <Route path="/userpage" element={<UserPage />} />
+          <Route path="/userevent/:eventId" element={<UserEvent />} />
+        </Routes>
+      </BrowserRouter>
     </>
   );
 }

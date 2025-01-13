@@ -39,3 +39,4 @@ export const usereventcheckinRoute = `${host}/api/user/events/checkin`;
 export const usereventRoute = `${host}/api/user/events/usereve`;
 export const usereventregistrationstatusRoute = `${host}/api/user/events/registrationStatus`;
 export const fetchUserDetailsRoute = `${host}/api/user/events/fetchuserdetails`;
+export const selfieuploadRoute = `${host}/api/user/events/uploadselfie`;

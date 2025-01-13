@@ -2,8 +2,16 @@ import { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import axios from "axios";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input"; 
-import { fetchUserDetailsRoute, usereventcheckinRoute, usereventregisterRoute, usereventregistrationstatusRoute, usereventRoute, userupdateguestRoute } from "@/utils/apiRoutes";
+import { Input } from "@/components/ui/input";
+import {
+  fetchUserDetailsRoute,
+  selfieuploadRoute,
+  usereventcheckinRoute,
+  usereventregisterRoute,
+  usereventregistrationstatusRoute,
+  usereventRoute,
+  userupdateguestRoute,
+} from "@/utils/apiRoutes";
 
 const UserEvent = () => {
   const { eventId } = useParams(); // Get the eventId from the URL
@@ -22,7 +30,8 @@ const UserEvent = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [message, setMessage] = useState("");
   const [isEditing, setIsEditing] = useState(false);
-
+const [selectedFile, setSelectedFile] = useState(null);
+const [uploading, setUploading] = useState(false);
   // Fetch event details and registration status on load
   useEffect(() => {
     const fetchEventDetails = async () => {
@@ -128,6 +137,42 @@ const UserEvent = () => {
   // Format dates for easier comparison
   const currentDate = new Date();
   const eventDate = new Date(eventDetails.date);
+
+
+   const handleFileChange = (e) => {
+     setSelectedFile(e.target.files[0]);
+   };
+
+   const handleUpload = async () => {
+     if (!selectedFile) {
+       setMessage("Please select a photo to upload.");
+       return;
+     }
+
+     const formData = new FormData();
+     formData.append("file", selectedFile);
+
+     try {
+       setUploading(true);
+       const response = await axios.post(
+         selfieuploadRoute,
+         formData,
+         {
+           headers: {
+             "Content-Type": "multipart/form-data",
+           },
+         }
+       );
+
+       setMessage(`Uploaded successfully! View: ${response.data.fileUrl}`);
+       setSelectedFile(null);
+     } catch (error) {
+       console.error("Upload failed:", error);
+       setMessage("Failed to upload the photo.");
+     } finally {
+       setUploading(false);
+     }
+   };
 
   return (
     <div className="user-event-page px-6 py-8 bg-gray-50 min-h-screen">
@@ -292,6 +337,28 @@ const UserEvent = () => {
               >
                 Check In
               </Button>
+            )}
+
+          {currentDate.toDateString() === eventDate.toDateString() &&
+            registrationStatus?.checkedIn && (
+              <div className="flex flex-col items-center">
+                <h2 className="text-2xl font-bold mb-4">Upload Event Photo</h2>
+
+                <Input
+                  type="file"
+                  accept="image/*"
+                  name="photo"
+                  onChange={handleFileChange}
+                />
+
+                <Button
+                  onClick={handleUpload}
+                  disabled={uploading}
+                  className="mt-4 bg-blue-600 text-white hover:bg-blue-700"
+                >
+                  {uploading ? "Uploading..." : "Upload Photo"}
+                </Button>
+              </div>
             )}
         </div>
       </div>

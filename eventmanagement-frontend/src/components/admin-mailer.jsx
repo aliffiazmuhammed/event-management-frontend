@@ -3,8 +3,9 @@ import axios from "axios";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Input } from "@/components/ui/input"; 
+import { sendremaindermailsRoute } from "@/utils/apiRoutes";
 
-const EmailSender = () => {
+const EmailSender = ({eventId}) => {
   const [emailContent, setEmailContent] = useState("");
   const [subject, setSubject] = useState("");
   const [loading, setLoading] = useState(false);
@@ -18,7 +19,8 @@ const EmailSender = () => {
 
     try {
       setLoading(true);
-      await axios.post("/api/send-email", {
+      await axios.post(sendremaindermailsRoute, {
+        eventId,
         subject,
         content: emailContent,
       });

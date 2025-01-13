@@ -473,7 +473,7 @@ function EventActionsPage({eventDetails}) {
         </Card>
       )}
 
-      <EmailSender />
+      <EmailSender eventId = {eventId}/>
     </div>
   );
 }
